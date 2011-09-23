@@ -2,6 +2,7 @@ import acm.program.*;
 import acm.graphics.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.concurrent.Semaphore;
 
 @SuppressWarnings("serial")
 public class ThreadsExample extends GraphicsProgram {
@@ -10,6 +11,7 @@ public class ThreadsExample extends GraphicsProgram {
 		racers = new RacingSquare[NUM_RACERS];
 		finished = new boolean[NUM_RACERS];
 		threads = new Thread[NUM_RACERS];
+		available = new Semaphore(1,true);
 		
 		// finish line
 		add(new GLine(510,0,510,400));
@@ -27,7 +29,7 @@ public class ThreadsExample extends GraphicsProgram {
 				if (racers[i] != null) {
 					remove(racers[i]);
 				}
-				racers[i] = new RacingSquare(i, finished);
+				racers[i] = new RacingSquare(i, finished, available);
 				add(racers[i], 10, 10 + (40 * i));
 
 				// send the new racer along the page
@@ -43,5 +45,8 @@ public class ThreadsExample extends GraphicsProgram {
 	private RacingSquare[] racers;
 	private boolean[] finished;
 	private Thread[] threads;
+	
+	private Semaphore available;
+
 	
 }
